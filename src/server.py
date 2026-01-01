@@ -1,5 +1,6 @@
 from starlette.middleware.cors import CORSMiddleware
 
+from .tools import *
 from .mcp_instance import mcp
 
 app = mcp.http_app(transport="streamable-http")

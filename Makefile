@@ -5,5 +5,8 @@ lint-and-format:
 	ruff check --fix .
 	ruff format .
 
-type-check:
+check-type:
 	pyrefly check . --verbose
+
+start-inspector:
+	npx @modelcontextprotocol/inspector

@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 http_client = None
 
 
-async def initialize_client():
+async def _initialize_client():
     """Initialize the global HTTP client."""
     global http_client
     if http_client is None:
@@ -30,7 +30,7 @@ async def initialize_client():
     return http_client
 
 
-async def cleanup_client():
+async def _cleanup_client():
     """Clean up the global HTTP client."""
     global http_client
     if http_client is not None:
@@ -40,26 +40,21 @@ async def cleanup_client():
 
 async def make_request(
     endpoint: str,
-    extra_context: Dict,
     method: str = "GET",
     params: Optional[Dict] = None,
     json_payload: Optional[Union[Dict, List]] = None,
-    content: Optional[str] = None,
     base_url: str = "",
-    include_auth: bool = True,
+    headers: Optional[Dict] = None,
 ):
     """
-    Make a request to the TestOps API.
+    Make an API request.
 
     Args:
         endpoint: The API endpoint to call.
-        extra_context: Context containing account_id, access_token, and project_id.
         method: HTTP method (GET, POST, PUT, etc.).
         params: Optional query parameters.
         json_payload: Optional JSON body to send with the request.
-        content: Optional string content to send (for PUT requests).
         base_url: Base URL for the API.
-        include_auth: Whether to include authentication headers.
 
     Returns:
         The JSON response or an error response dictionary.
@@ -67,14 +62,11 @@ async def make_request(
     try:
         url = f"{base_url}{endpoint}"
 
-        # Build headers
-        headers = {}
-
-        if content is not None:
-            headers["Content-Type"] = "application/json"
+        headers = headers or {}
+        headers["Content-Type"] = "application/json"
 
         # Use global client
-        client = await initialize_client()
+        client = await _initialize_client()
 
         logger.debug(f"Sending {method} to {endpoint}: {headers}")
 
@@ -87,7 +79,7 @@ async def make_request(
             )
         elif method.upper() == "PUT":
             response = await client.put(
-                url, params=params, content=content, json=json_payload, headers=headers
+                url, params=params, json=json_payload, headers=headers
             )
         elif method.upper() == "DELETE":
             response = await client.delete(url, params=params, headers=headers)
@@ -101,10 +93,6 @@ async def make_request(
         # Handle 204 No Content - successful request with no response body
         if response.status_code == 204:
             return {"status": "success", "status_code": 204, "message": "No content"}
-
-        # For PUT requests to S3 (content upload), we might not have JSON response
-        if method.upper() == "PUT" and content is not None:
-            return {"status": "success", "status_code": response.status_code}
 
         # Otherwise, parse and return JSON
         return response.json()
@@ -133,24 +121,3 @@ async def make_request(
     except Exception as e:
         logger.error(f"Unexpected error for {endpoint}: {str(e)}")
         raise Exception(f"Unexpected error for {endpoint}: {str(e)}")
-
-
-async def make_s3_request(url: str):
-    """
-    Make a request to an S3 pre-signed URL.
-
-    Args:
-        url: The full S3 pre-signed URL.
-
-    Returns:
-        The JSON response or an error response dictionary.
-    """
-    # S3 pre-signed URLs don't need authentication
-    # We pass the full URL as endpoint with empty base_url
-    return await make_request(
-        endpoint=url,
-        extra_context={},
-        method="GET",
-        base_url="",
-        include_auth=False,
-    )
