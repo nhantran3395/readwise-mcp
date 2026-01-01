@@ -131,7 +131,7 @@ pytest --cov=src --cov-report=html
 ## 🏗 Project Structure
 
 ```
-protected-mcp-server/
+readwise-mcp/
 ├── src/
 │   ├── tools/                    # MCP tool implementations
 │   │   └──highlight.py           
