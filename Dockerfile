@@ -1,24 +1,24 @@
-FROM python:3.13-alpine AS builder
+FROM python:3.13.2-slim AS builder
+
 WORKDIR /app
 RUN pip install uv
-COPY . .
-RUN uv sync --no-dev \
-  && uv run opentelemetry-bootstrap -a requirements > requirements.txt \
-  && uv pip install -r requirements.txt
+COPY pyproject.toml uv.lock ./
+RUN uv sync --no-dev
 
+FROM python:3.13.2-slim AS production
 
-FROM python:3.13-alpine AS production
 WORKDIR /app
-
-RUN addgroup -g 10001 user \
-  && adduser -u 10001 -G user -s /bin/sh -D user \
+RUN groupadd -g 10001 user \
+  && useradd -u 10001 -g user -s /bin/sh -m user \
   && chown -R 10001:10001 /app
 
-USER 10001
+COPY --chown=user:user --from=builder /app/.venv /app/.venv
+COPY --chown=user:user src /app/src
 
-COPY --chown=10001:10001 --from=builder /app/.venv /app/.venv
-COPY --chown=10001:10001 --from=builder /app/src /app/src
+USER user
+ENV PATH="/app/.venv/bin:$PATH" \
+    PYTHONPATH=/app
 
-ENV PATH="/app/.venv/bin:$PATH"
+EXPOSE 8000
 
-CMD ["uvicorn", "src.server:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["python", "-m", "uvicorn", "src.server:app", "--host", "0.0.0.0", "--port", "8000"]
