@@ -1,0 +1,8 @@
+services:
+  readwise-mcp:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - READWISE_API_BASE_URL=${READWISE_API_BASE_URL:-https://readwise.io/api/v2}
+      - READWISE_API_KEY=${READWISE_API_KEY}

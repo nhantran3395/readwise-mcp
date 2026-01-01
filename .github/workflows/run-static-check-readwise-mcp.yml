@@ -1,0 +1,40 @@
+name: "[Static Check] Readwise MCP Server"
+
+on:
+  pull_request:
+    paths:
+      - "src/**"
+      - "tests/**"
+      - "pyproject.toml"
+      - "uv.lock"
+      - ".github/workflows/run-static-check-readwise-mcp.yml"
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  lint-and-typecheck:
+    runs-on: ubuntu-latest
+    name: Lint and Type Check
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v5
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: |
+          uv sync --locked --all-extras --dev
+
+      - name: Run pyrefly
+        run: uv run pyrefly check
+
+      - name: Run ruff linter check
+        run: uvx ruff check
+
+      - name: Run ruff format check
+        run: uvx ruff format --check
