@@ -28,7 +28,7 @@ jobs:
           uv sync --locked --all-extras --dev
 
       - name: Run pyrefly
-        run: uv run pyright
+        run: uv run pyrefly check
 
       - name: Run ruff linter check
         run: uvx ruff check
