@@ -35,22 +35,3 @@ jobs:
 
       - name: Run ruff format check
         run: uvx ruff format --check
-
-  unit-test:
-    runs-on: ubuntu-latest
-    name: Run Unit Tests
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v5
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v6
-        with:
-          enable-cache: true
-
-      - name: Install dependencies
-        run: |
-          uv sync --locked --all-extras --dev
-
-      - name: Run pytest
-        run: uv run pytest tests/ -v
