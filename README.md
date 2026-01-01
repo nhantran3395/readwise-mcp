@@ -56,7 +56,7 @@ Edit `.env` with your Katalon TestOps credentials and endpoints (see [Configurat
 ### 4. Start the Server
 
 ```bash
-  make start-dev
+  make dev
 ```
 
 The server will be available at: **`http://localhost:8000/mcp`**
