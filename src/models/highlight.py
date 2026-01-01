@@ -3,6 +3,7 @@ from typing import List
 
 from .tag import Tag
 
+
 @dataclass
 class Highlight:
     text: str

@@ -6,5 +6,5 @@ class Tag:
     name: str
 
     @classmethod
-    def from_dict(cls, data: dict) -> 'Tag':
-        return cls(name=data['name'])
+    def from_dict(cls, data: dict) -> "Tag":
+        return cls(name=data["name"])

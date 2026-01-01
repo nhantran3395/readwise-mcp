@@ -55,6 +55,7 @@ async def make_request(
         params: Optional query parameters.
         json_payload: Optional JSON body to send with the request.
         base_url: Base URL for the API.
+        headers: Optional headers to include in the request.
 
     Returns:
         The JSON response or an error response dictionary.
