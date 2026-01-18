@@ -1,9 +1,10 @@
 from typing import List
 
+from ..clients.readwise import ReadwiseClient
 from ..mcp_instance import mcp
 from ..models.highlight import Highlight
 
-from ..services.highlight import get_highlights
+from ..services.highlight import HighlightService
 
 
 @mcp.tool
@@ -14,5 +15,6 @@ async def list_highlights() -> List[Highlight]:
     Returns:
         A list of highlights.
     """
-    highlights = await get_highlights()
+    readwise_client = ReadwiseClient()
+    highlights = await HighlightService(client=readwise_client).get_highlights()
     return highlights
