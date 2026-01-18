@@ -1,5 +1,7 @@
+from typing import List
+
 from ..errors import ApiServerError
-from ..models.highlight import Highlight
+from ..models import Highlight, Tag
 from ..utils.http import make_request
 from ..config import Config, ApiEndpoint
 
@@ -17,7 +19,7 @@ class ReadwiseClient:
         self.base_url = Config.READWISE_API_BASE_URL
         self.headers = {"Authorization": f"Token {Config.READWISE_API_KEY}"}
 
-    async def get_highlights(self):
+    async def get_highlights(self) -> List[Highlight]:
         response = await make_request(
             endpoint=ApiEndpoint.HIGHLIGHTS.value,
             base_url=self.base_url,
@@ -33,3 +35,18 @@ class ReadwiseClient:
         ]
 
         return highlights
+
+    async def get_tags(self) -> List[Tag]:
+        response = await make_request(
+            endpoint=ApiEndpoint.TAGS.value,
+            base_url=self.base_url,
+            headers=self.headers,
+        )
+
+        _validate_response(response)
+
+        results = response["results"]
+
+        tags = [Tag.from_dict(item) for item in results if isinstance(item, dict)]
+
+        return tags
