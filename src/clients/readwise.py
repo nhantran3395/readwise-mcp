@@ -1,5 +1,15 @@
+from ..errors import ApiServerError
+from ..models.highlight import Highlight
 from ..utils.http import make_request
 from ..config import Config, ApiEndpoint
+
+
+def _validate_response(response):
+    if not response or "results" not in response:
+        raise ApiServerError("Unexpected response from Readwise API")
+
+    if not isinstance(response["results"], list):
+        raise ApiServerError("Unexpected response format: results is not a list")
 
 
 class ReadwiseClient:
@@ -13,4 +23,13 @@ class ReadwiseClient:
             base_url=self.base_url,
             headers=self.headers,
         )
-        return response
+
+        _validate_response(response)
+
+        results = response["results"]
+
+        highlights = [
+            Highlight.from_dict(item) for item in results if isinstance(item, dict)
+        ]
+
+        return highlights
