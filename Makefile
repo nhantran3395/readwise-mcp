@@ -1,3 +1,7 @@
+prepare-env:
+	@echo "Preparing virtual environment and installing dependencies"
+	uv sync --all-extras --dev
+
 dev:
 	@echo "Starting dev server..."
 	uvicorn src.server:app --reload

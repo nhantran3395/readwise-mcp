@@ -40,7 +40,7 @@ An MCP server that provides comprehensive tools for interacting with Readwise.io
 ### 2. Install Dependencies
 
 ```bash
-  uv sync --all-extras --dev
+  make prepare-env
 ```
 
 This installs all dependencies including development tools, respecting the lockfile for reproducible builds.
