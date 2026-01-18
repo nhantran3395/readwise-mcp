@@ -1,10 +1,10 @@
 from typing import List
 
-from ..clients.readwise import ReadwiseClient
-from ..mcp_instance import mcp
-from ..models.highlight import Highlight, Tag
+from clients.readwise import ReadwiseClient
+from mcp_instance import mcp
+from models.highlight import Highlight, Tag
 
-from ..services.highlight import HighlightService
+from services.highlight import HighlightService
 
 
 @mcp.tool

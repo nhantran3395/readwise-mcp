@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List
+from typing import List, Dict
 
 from .tag import Tag
 
@@ -13,7 +13,7 @@ class Highlight:
     updated: str
 
     @classmethod
-    def from_dict(cls, data: dict) -> "Highlight":
+    def from_dict(cls, data: Dict) -> "Highlight":
         tags = [Tag.from_dict(tag) for tag in data.get("tags", [])]
         return cls(
             text=data.get("text", ""),

@@ -1,7 +1,7 @@
 from typing import List
 
-from ..clients.readwise import ReadwiseClient
-from ..models import Highlight, Tag
+from clients.readwise import ReadwiseClient
+from models import Highlight, Tag
 
 
 class HighlightService:

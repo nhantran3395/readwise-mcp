@@ -1,7 +1,7 @@
 from starlette.middleware.cors import CORSMiddleware
 
-from .tools import *  # noqa: F403
-from .mcp_instance import mcp
+from tools import *  # noqa: F403
+from mcp_instance import mcp
 
 app = mcp.http_app(transport="streamable-http")
 

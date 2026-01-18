@@ -9,8 +9,8 @@ import httpx
 import logging
 from typing import Dict, Optional, List, Union
 
-from ..config import Config
-from ..errors import ApiClientError, ApiServerError, ApiTimeoutError
+from config import Config
+from errors import ApiClientError, ApiServerError, ApiTimeoutError
 
 
 logger = logging.getLogger(__name__)

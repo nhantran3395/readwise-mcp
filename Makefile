@@ -1,3 +1,5 @@
+export PYTHONPATH := src
+
 prepare-env:
 	@echo "Preparing virtual environment and installing dependencies"
 	uv sync --all-extras --dev

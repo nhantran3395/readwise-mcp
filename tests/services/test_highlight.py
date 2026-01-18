@@ -1,9 +1,8 @@
 import pytest
-from unittest.mock import AsyncMock
+from unittest.mock import AsyncMock, MagicMock
 
-from src.clients.readwise import ReadwiseClient
-from src.errors import ApiServerError
-from src.services.highlight import HighlightService
+from errors import ApiServerError
+from services.highlight import HighlightService
 
 
 @pytest.fixture
@@ -21,7 +20,7 @@ def highlight_service(mock_readwise_client):
 class TestHighlightService:
     @pytest.mark.asyncio
     async def test_get_highlights_success_when_client_return_valid_response(
-        self, highlight_service: HighlightService, mock_readwise_client: ReadwiseClient
+        self, highlight_service: HighlightService, mock_readwise_client: MagicMock
     ):
         mock_readwise_client.get_highlights.return_value = {
             "results": [{"text": "Testing is fun", "author": "Dev"}]
@@ -34,7 +33,7 @@ class TestHighlightService:
 
     @pytest.mark.asyncio
     async def test_get_highlights_api_server_error_is_propagated_when_api_response_does_not_contain_results_field(
-        self, highlight_service: HighlightService, mock_readwise_client: ReadwiseClient
+        self, highlight_service: HighlightService, mock_readwise_client: MagicMock
     ):
         mock_readwise_client.get_highlights.side_effect = ApiServerError(
             "Unexpected response from Readwise API"
@@ -47,7 +46,7 @@ class TestHighlightService:
 
     @pytest.mark.asyncio
     async def test_get_highlights_api_server_error_is_propagated_when_results_field_in_api_response_is_not_in_expected_format(
-        self, highlight_service: HighlightService, mock_readwise_client: ReadwiseClient
+        self, highlight_service: HighlightService, mock_readwise_client: MagicMock
     ):
         mock_readwise_client.get_highlights.side_effect = ApiServerError(
             "Unexpected response from Readwise API"
@@ -60,7 +59,7 @@ class TestHighlightService:
 
     @pytest.mark.asyncio
     async def test_list_tags_success_when_client_return_valid_response(
-        self, highlight_service: HighlightService, mock_readwise_client: ReadwiseClient
+        self, highlight_service: HighlightService, mock_readwise_client: MagicMock
     ):
         mock_readwise_client.get_tags.return_value = {
             "results": [{"name": "pytest", "key": "pytest"}]
@@ -73,7 +72,7 @@ class TestHighlightService:
 
     @pytest.mark.asyncio
     async def test_list_tags_api_server_error_is_propagated_when_api_response_does_not_contain_results_field(
-        self, highlight_service: HighlightService, mock_readwise_client: ReadwiseClient
+        self, highlight_service: HighlightService, mock_readwise_client: MagicMock
     ):
         mock_readwise_client.get_tags.side_effect = ApiServerError(
             "Unexpected response from Readwise API"
@@ -86,7 +85,7 @@ class TestHighlightService:
 
     @pytest.mark.asyncio
     async def test_list_tags_api_server_error_is_propagated_when_results_field_in_api_response_is_not_in_expected_format(
-        self, highlight_service: HighlightService, mock_readwise_client: ReadwiseClient
+        self, highlight_service: HighlightService, mock_readwise_client: MagicMock
     ):
         mock_readwise_client.get_tags.side_effect = ApiServerError(
             "Unexpected response from Readwise API"
